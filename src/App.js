@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import { Link } from 'react-router';
+import Home from './templates/Home'; 
 import './App.css';
 
 class App extends Component {
@@ -13,6 +15,11 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+
+        <nav>
+          <h1><Link to={`/`}> <i className="fa fa-calendar rotate"></i> Home </Link></h1>
+        </nav>
+        {this.props.children || <Home />}
       </div>
     );
   }
