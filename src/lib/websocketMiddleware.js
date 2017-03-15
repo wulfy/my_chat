@@ -1,11 +1,3 @@
-const TYPE_MESSAGE = 'message';
-const TYPE_SERVER = 'server';
-const TYPE_ERROR = 'error';
-const TYPE_COMMAND = 'command';
-const COMMAND_UPDATE_USR_LIST = 'update_user_list';
-const COMMAND_LISTUSER = 'list_users';
-const COMMAND_DISPLAY_MSG = 'display';
-
 function sendText(socket,type,message,channel) {
   // Construct a msg object containing the data the server needs to process the message from the chat client.
   var msg = {
@@ -28,7 +20,7 @@ export default function websocketMiddleware() {
   	console.log("websock " + action.type);
 
   	//if the action type is not handle by this middleware
-  	if(action.type != "CREATE_SOCKET" && action.type != "SEND_MESSAGE" && action.type != "DISCONNECT_SOCKET")
+  	if(action.type !== "CREATE_SOCKET" && action.type !== "SEND_MESSAGE" && action.type !== "DISCONNECT_SOCKET")
   		return next(action);
 
 

@@ -17,12 +17,12 @@ var socket = null;
 export default function socketIOMiddleware() {
   return next => action => {
 
-  	const { type, ...rest } = action;
-  	console.log("websock " + action.type);
+    const { type, ...rest } = action;
+    console.log("websock " + action.type);
 
-  	//if the action type is not handle by this middleware
-  	if(action.type !== "CREATE_SOCKET" && action.type !== "SEND_MESSAGE" && action.type !== "DISCONNECT_SOCKET")
-  		return next(action);
+    //if the action type is not handle by this middleware
+    if(action.type !== "CREATE_SOCKET" && action.type !== "SEND_MESSAGE" && action.type !== "DISCONNECT_SOCKET")
+      return next(action);
 
 
     if(action.type === 'CREATE_SOCKET')
@@ -36,9 +36,9 @@ export default function socketIOMiddleware() {
 
     if(action.type === "DISCONNECT_SOCKET")
       socket.close();
-  	 
+     
 
-  	 socket.on("connection",(e) => {
+     socket.on("connection",(e) => {
       // connection opened
       console.log("connexion opened");
       /*if(wainting_messages.length >0)

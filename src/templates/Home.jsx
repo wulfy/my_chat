@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect }    from 'react-redux';
 import {sendMessage}  from '../actions/MessageActions';
-import {createSocket} from '../actions/WebSocketActions';
 import ChatMessages from './ChatMessages';
 import ListUsers from './ListUsers';
 import Login from './Login';
@@ -29,7 +28,7 @@ export default connect(state => ({ message: state.message, socket:state.socket})
 
   	let disabled = !socket.connected;
   	console.log(messages);
-  	messages = typeof messages != "undefined" ? messages  : [];
+  	messages = typeof messages !== "undefined" ? messages  : [];
 
     console.log("rendering home");
     console.log(messages);

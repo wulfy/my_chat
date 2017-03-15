@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { createStore, applyMiddleware, /*compose,*/ combineReducers } from 'redux';
 import {logMiddleware}   from '../lib/logMiddleWare';
 import socketIOMiddleware from '../lib/socketIOMiddleware';
 import * as reducers  from '../reducers';
