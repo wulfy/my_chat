@@ -20,7 +20,7 @@ export default class ColoredListUsers{
 
   checkActivate = (type) =>
   {
-  		return type == "SOCKET_COMMAND_RECEIVED";
+  		return type === "SOCKET_COMMAND_RECEIVED";
   }
 
  changeAction = (action) =>
@@ -31,7 +31,7 @@ export default class ColoredListUsers{
  	let newUsersList = [];
  	let currentUserData = null;
  	let loginValue = null;
- 	let loginStyle = null;
+ 	let loginStyle = {};
  	let id =null;
  	if(action.message.data)
  	{

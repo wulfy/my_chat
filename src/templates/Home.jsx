@@ -32,8 +32,8 @@ export default connect(state => ({ message: state.message, socket:state.socket})
 
     console.log("rendering home");
     console.log(messages);
-    var socketMessage = !disabled?"connected":"Not connected";
-    var socketMessageStyle = !disabled?{color:"green"}:{color:"red"};
+    //var socketMessage = !disabled?"connected":"Not connected";
+    //var socketMessageStyle = !disabled?{color:"green"}:{color:"red"};
     //utiliser un composant pour interprêter le contenu du serveur (et essayer de ne pas avoir à s'en soucier ici)
     return (
       

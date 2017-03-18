@@ -12,7 +12,7 @@ export default class PluginsHelper{
 	  console.log(plugins);
 	  if(Object.keys(plugins).length >0)
 	    Object.keys(plugins).forEach(function(key) {
-	      var currentObject = new plugins[key];
+	      var currentObject = new plugins[key]();
 
 	      console.log("calling " + key);
 	      console.log(currentObject);

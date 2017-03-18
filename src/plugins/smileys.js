@@ -1,5 +1,19 @@
 import React  from 'react';
 
+const smileysCharMapping = {
+"<:)" : "::ange::" ,
+">:(" : "::angry::",
+"oO" : "::blink::",
+";)" : "::clin::",
+":p" : "::langue::"
+};
+const smileysMapping = {
+"ange" : "http://www.infowebmaster.fr/img/sdz/ange.png",
+"angry" : "http://www.infowebmaster.fr/img/sdz/angry.gif",
+"blink" : "http://www.infowebmaster.fr/img/sdz/blink.gif",
+"clin" : "http://www.infowebmaster.fr/img/sdz/clin.png",
+"langue" : "http://www.infowebmaster.fr/img/sdz/langue.png"
+};
 /*
 {
   type: 'button',
@@ -16,12 +30,23 @@ import React  from 'react';
 
 */
 
+function isOdd(num) { return num % 2;}
+
+function replaceCharBySmileysCode(text)
+{
+	var str = text;
+	var last = {};
+	str = str.replace(/\<:\)|\>:\(|oO|;\)/gi, function(matched){
+	  return smileysCharMapping[matched];
+	});
+
+	return str;
+}
 function getAllIndexOf(text,searchedString)
 {
 	var matches = [];
 	var match = [];
 	var texts = [];
-	var searchedLength = searchedString.length;
 	var previousStartIndex =0
 	var previousSmileyIndex = 0;
 	var regexp = new RegExp(searchedString,"g");
@@ -29,7 +54,7 @@ function getAllIndexOf(text,searchedString)
 
 
 
-	while ((match = regexp.exec(text)) != null && watchdog <1000) {
+	while ((match = regexp.exec(text)) !== null && watchdog <1000) {
 
 		watchdog ++;
 
@@ -65,7 +90,7 @@ export default class Smiley{
 
   checkActivate = (type) =>
   {
-  		return type == "SOCKET_MESSAGE_RECEIVED";
+  		return type === "SOCKET_MESSAGE_RECEIVED";
   }
 
  changeAction = (action) =>
@@ -73,40 +98,54 @@ export default class Smiley{
  	//console.log("change action :");
  	//console.log(action);
  	let newAction = action;
- 	let searchedString = "smile";
+ 	let searchedString = ":\\)";
  	var filterData = "";
  	var domValue = [];
+ 	console.log(action);
+ 	let {message} = action;
+    let {type,login,text,timestamp} = message;
 
- 	if(action.message)
+ 	if(text)
  	{
  		
- 		filterData = getAllIndexOf(action.message.message,searchedString);
+ 		/*filterData = getAllIndexOf(text,searchedString);
  		console.log("filter data");
  		console.log(filterData);
  		let images = null;
-	 	let text = null;
+
 
 	 	for(var i=0; i<=filterData.size;i++)
 	 	{
 	 		images = null;
-	 		text = null;
 
-	 		if(typeof filterData.matches[i] != 'undefined')
-	 			images = <img src="http://www.infowebmaster.fr/img/sdz/rouge.png" />;
+	 		if(typeof filterData.matches[i] !== 'undefined')
+	 			images = <img key={'msg-img'+i} src="http://www.infowebmaster.fr/img/sdz/rouge.png" alt='smiley'/>;
 
-	 		if(typeof filterData.texts[i] != 'undefined')
-	 			domValue.push( <span> {filterData.texts[i]} {images} </span>);
+	 		if(typeof filterData.texts[i] !== 'undefined')
+	 			domValue.push( <span key={'msg-text'+i}> {filterData.texts[i]} {images} </span>);
 	 		else if(images != null )
 	 			domValue.push(images);
 
 		 	
 	 	}
 
-	 	domValue = domValue.length > 0 ?  domValue : action.message.message;
+	 	domValue = domValue.length > 0 ?  domValue : text;*/
 
+	 	var transformedText = replaceCharBySmileysCode(text);
+	 	var tabTransform = transformedText.split("::");
+	 	var newText = "";
+	 	let currentText = "";
+	 	for(let i=0; i<tabTransform.length;i++)
+	 	{
+	 		currentText = tabTransform[i];
+	 		if(isOdd && smileysMapping[currentText])
+	 			domValue.push(<img key={'msg-img'+i} src={smileysMapping[currentText]} alt='smiley' /> )
+	 		else if(currentText.length > 0)
+	 			domValue.push(<span key={'msg-text'+i}> {currentText} </span> )
+	 	}
 	 	
- 		newAction = {...action,message:{...action.message,message:domValue}};
- 		console.log("newAction");
+ 		newAction = {...action,message:{...message,text:domValue}};
+ 		console.log("newAction smileys");
  		console.log(newAction);
  	}
 

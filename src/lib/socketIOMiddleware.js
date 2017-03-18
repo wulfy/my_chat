@@ -9,7 +9,7 @@ function sendText(socket,type,message) {
   };
 
   // Send the msg object as a JSON-formatted string.
-  socket.emit(type,JSON.stringify(msg));
+  socket.emit(type,msg);
 }
 
 var socket = null;
@@ -17,16 +17,13 @@ var socket = null;
 export default function socketIOMiddleware() {
   return next => action => {
 
-    const { type, ...rest } = action;
+    //const { type, ...rest } = action;
+
     console.log("websock " + action.type);
 
     //if the action type is not handle by this middleware
     if(action.type !== "CREATE_SOCKET" && action.type !== "SEND_MESSAGE" && action.type !== "DISCONNECT_SOCKET")
       return next(action);
-
-
-    if(action.type === 'CREATE_SOCKET')
-      socket = require('socket.io-client')("http://localhost:8100");
 
     if(action.type === "SEND_MESSAGE" && socket)
     {
@@ -34,7 +31,10 @@ export default function socketIOMiddleware() {
       return next(action);
     }
 
-    if(action.type === "DISCONNECT_SOCKET")
+    if(action.type === 'CREATE_SOCKET')
+      socket = require('socket.io-client')("http://localhost:8100");
+
+    if(action.type === "DISCONNECT_SOCKET" && socket)
       socket.close();
      
 
@@ -47,44 +47,48 @@ export default function socketIOMiddleware() {
           socket.send(wainting_messages[index]);
         } */
         sendText(socket,"init",action.login,action.channel);
-        return next({ ...rest, type: "SOCKET_OPENED", socket:socket , login:action.login});
+        return next(action);
     });
 
      socket.on(COMMAND_UPDATE_USR_LIST,(e)=>{
-
-
+      console.log(COMMAND_UPDATE_USR_LIST + " received");
+      return next({...action,type:COMMAND_UPDATE_USR_LIST});
      });
 
 
+   socket.on("requestInit",(e) => {
+      // connection opened
+      console.log("connexion opened");
+      sendText(socket,"init",action.login,action.channel);
+      return next({ ...action, type: "SOCKET_OPENED", socket:socket , login:action.login});
+    });
+
    socket.on("message",(e) => {
       // a message was received
-      let message = JSON.parse(e.data);
+      let message = JSON.parse(e);
       console.log("message reçu ");
       console.log(message);
       let type = "SOCKET_MESSAGE_RECEIVED";
-      if(message.command !== false)
-        type = "SOCKET_COMMAND_RECEIVED"
-
-      return next({ ...rest, type: type , message:message });//Gérer le cas d un message array pour transmettre une nouvelle action pour gérer la liste user par ex
+      return next({ ...action, type: type , message:message });//Gérer le cas d un message array pour transmettre une nouvelle action pour gérer la liste user par ex
     });
 
    socket.on(TYPE_ERROR,(e) => {
       let message = e.data;
       console.log("error " + e.message);
-      return next({ ...rest, type: "SOCKET_ERROR_MESSAGE", message:message });
+      return next({ ...action, type: "SOCKET_ERROR_MESSAGE", message:message });
    });
 
     socket.onerror = (e) => {
       // an error occurred
       console.log("error " + e.message);
-      return next({ ...rest, type: "SOCKET_ERROR_MESSAGE", message:"connexion error" });
+      return next({ ...action, type: "SOCKET_ERROR_MESSAGE", message:"connexion error" });
     };
 
    socket.onclose = (e) => {
       // connection closed
       let message = e.code + ":" + e.reason;
       console.log("fermeture : " + e.code, e.reason);
-      return next({ ...rest, type: "SOCKET_CLOSED", message:message });
+      return next({ ...action, type: "SOCKET_CLOSED", message:message });
     };
 
     /*console.log(socket);

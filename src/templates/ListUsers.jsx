@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect }            from 'react-redux';
+const COMMAND_UPDATE_USR_LIST = 'update_user_list';
 
 export default connect(state => ({ command:state.command}))(
  class ListUsers extends React.Component {
   render() 
   {
-  	var {command} = this.props;
+  	var {command_data,type} = this.props.command;
     console.log("----------command-----------");
-    console.log(command); 
-    var command_data = command.command_data;
+    console.log(this.props.command); 
     var usersListHtml = null;
 
-    if(command_data)
+    if(command_data && type === COMMAND_UPDATE_USR_LIST)
       usersListHtml = command_data.map((userData) => <span>{userData.login} </span>);
     //utiliser un composant pour interprêter le contenu du serveur (et essayer de ne pas avoir à s'en soucier ici)
     return (
