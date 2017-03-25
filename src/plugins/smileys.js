@@ -14,21 +14,7 @@ const smileysMapping = {
 "clin" : "http://www.infowebmaster.fr/img/sdz/clin.png",
 "langue" : "http://www.infowebmaster.fr/img/sdz/langue.png"
 };
-/*
-{
-  type: 'button',
-  props: {
-    className: 'button button-blue',
-    children: {
-      type: 'b',
-      props: {
-        children: 'OK!'
-      }
-    }
-  }
-}
 
-*/
 
 function isOdd(num) { return num % 2;}
 
@@ -42,49 +28,6 @@ function replaceCharBySmileysCode(text)
 
 	return str;
 }
-function getAllIndexOf(text,searchedString)
-{
-	var matches = [];
-	var match = [];
-	var texts = [];
-	var previousStartIndex =0
-	var previousSmileyIndex = 0;
-	var regexp = new RegExp(searchedString,"g");
-	var watchdog = 0;
-
-
-
-	while ((match = regexp.exec(text)) !== null && watchdog <1000) {
-
-		watchdog ++;
-
-	  if(previousStartIndex<match.index)
-	  {
-	  	texts[previousSmileyIndex] = text.substring(previousStartIndex,match.index);
-	  }
-
-	  matches[previousSmileyIndex] = match.index;
-	  previousSmileyIndex++;
-
-	  previousStartIndex = regexp.lastIndex;
-	  console.log("previousStartIndex"+ previousStartIndex);
-	  console.log("match.index"+ match.index);
-
-	}
-
-	if(previousStartIndex < text.length)
-	{
-
-		texts[previousSmileyIndex] = text.substring(previousStartIndex);
-	}
-
-
-	console.log(" matches " + previousStartIndex);
-	console.log(matches);
-
-	return {matches:matches,texts:texts, size:previousSmileyIndex};
-}
-
 
 export default class Smiley{
 
@@ -103,34 +46,11 @@ export default class Smiley{
  	var domValue = [];
  	console.log(action);
  	let {message} = action;
-    let {type,login,text,timestamp} = message;
+ 	let {data,login} = message;
+    let {text,date} = data;
 
  	if(text)
  	{
- 		
- 		/*filterData = getAllIndexOf(text,searchedString);
- 		console.log("filter data");
- 		console.log(filterData);
- 		let images = null;
-
-
-	 	for(var i=0; i<=filterData.size;i++)
-	 	{
-	 		images = null;
-
-	 		if(typeof filterData.matches[i] !== 'undefined')
-	 			images = <img key={'msg-img'+i} src="http://www.infowebmaster.fr/img/sdz/rouge.png" alt='smiley'/>;
-
-	 		if(typeof filterData.texts[i] !== 'undefined')
-	 			domValue.push( <span key={'msg-text'+i}> {filterData.texts[i]} {images} </span>);
-	 		else if(images != null )
-	 			domValue.push(images);
-
-		 	
-	 	}
-
-	 	domValue = domValue.length > 0 ?  domValue : text;*/
-
 	 	var transformedText = replaceCharBySmileysCode(text);
 	 	var tabTransform = transformedText.split("::");
 	 	var newText = "";
@@ -144,7 +64,7 @@ export default class Smiley{
 	 			domValue.push(<span key={'msg-text'+i}> {currentText} </span> )
 	 	}
 	 	
- 		newAction = {...action,message:{...message,text:domValue}};
+ 		newAction = {...action,message:{...message,data:{...data,text:domValue}}};
  		console.log("newAction smileys");
  		console.log(newAction);
  	}

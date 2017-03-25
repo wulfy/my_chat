@@ -12,7 +12,7 @@ export default connect(state => ({ command:state.command}))(
     var usersListHtml = null;
 
     if(command_data && type === COMMAND_UPDATE_USR_LIST)
-      usersListHtml = command_data.map((userData) => <span>{userData.login} </span>);
+      usersListHtml = command_data.map((userData,index) => <span key={'usrlist-'+index}>{userData.login} </span>);
     //utiliser un composant pour interprêter le contenu du serveur (et essayer de ne pas avoir à s'en soucier ici)
     return (
       <div id="userList">

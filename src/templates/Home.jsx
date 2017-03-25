@@ -2,6 +2,7 @@ import React from 'react';
 import { connect }    from 'react-redux';
 import {sendMessage}  from '../actions/MessageActions';
 import ChatMessages from './ChatMessages';
+import ErrorMessages from './ErrorMessages';
 import ListUsers from './ListUsers';
 import Login from './Login';
 
@@ -44,7 +45,7 @@ export default connect(state => ({ message: state.message, socket:state.socket})
           		 <button type="submit" disabled={disabled}> send message </button> <input id="message" name="message" type="text" />
           	</form>
             }
-            
+            <ErrorMessages/>
           	{!disabled && <ChatMessages/> }
             {!disabled && <ListUsers/> }
       </div>

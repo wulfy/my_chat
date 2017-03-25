@@ -1,4 +1,4 @@
-const TYPE_ERROR = 'error';
+const TYPE_ERROR = 'message_error';
 const COMMAND_UPDATE_USR_LIST = 'update_user_list';
 
 function sendText(socket,type,message) {
@@ -51,8 +51,9 @@ export default function socketIOMiddleware() {
     });
 
      socket.on(COMMAND_UPDATE_USR_LIST,(e)=>{
+      let message = JSON.parse(e);
       console.log(COMMAND_UPDATE_USR_LIST + " received");
-      return next({...action,type:COMMAND_UPDATE_USR_LIST});
+      return next({...action,type:COMMAND_UPDATE_USR_LIST,message:message});
      });
 
 
@@ -73,7 +74,7 @@ export default function socketIOMiddleware() {
     });
 
    socket.on(TYPE_ERROR,(e) => {
-      let message = e.data;
+      let message = JSON.parse(e);
       console.log("error " + e.message);
       return next({ ...action, type: "SOCKET_ERROR_MESSAGE", message:message });
    });
